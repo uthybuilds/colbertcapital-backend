@@ -2,13 +2,10 @@ import { env } from '../../config/env.js'
 import { logger } from '../../config/logger.js'
 import { prisma } from '../../config/prisma.js'
 import { requestMeta } from '../../lib/request.js'
-import { assertHuman } from '../../lib/turnstile.js'
 import { sendMail } from '../../mail/mailer.js'
 import { renderInquiryAutoReply, renderInquiryNotification } from '../../mail/templates.js'
 
 export async function submitInquiry({ input, req }) {
-  await assertHuman(input.turnstileToken, req.ip)
-
   const meta = requestMeta(req)
 
   const inquiry = await prisma.inquiry.create({

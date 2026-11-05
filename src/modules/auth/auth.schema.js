@@ -20,9 +20,6 @@ const name = (label) =>
 
 const otpPurpose = z.enum(['EMAIL_VERIFICATION', 'LOGIN', 'RESET_PASSWORD'])
 
-/** Cloudflare Turnstile token. Verified server-side; optional when disabled. */
-const turnstileToken = z.string().trim().max(4096).optional()
-
 export const registerSchema = z.object({
   email,
   password: passwordSchema,
@@ -30,7 +27,6 @@ export const registerSchema = z.object({
   lastName: name('Last name'),
   phone: z.string().trim().max(32).optional().or(z.literal('')),
   country: z.string().trim().max(64).optional().or(z.literal('')),
-  turnstileToken,
 })
 
 export const verifyEmailSchema = z.object({
@@ -41,13 +37,11 @@ export const verifyEmailSchema = z.object({
 export const resendOtpSchema = z.object({
   email,
   purpose: otpPurpose,
-  turnstileToken,
 })
 
 export const loginSchema = z.object({
   email,
   password: z.string().min(1, 'Enter your password.'),
-  turnstileToken,
 })
 
 export const loginVerifySchema = z.object({
@@ -65,7 +59,6 @@ export const logoutSchema = z.object({
 
 export const forgotPasswordSchema = z.object({
   email,
-  turnstileToken,
 })
 
 export const resetPasswordSchema = z.object({

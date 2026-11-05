@@ -53,9 +53,6 @@ const schema = z.object({
   MAIL_TRANSPORT: z.enum(['resend', 'file']).default('resend'),
   MAIL_SINK_DIR: z.string().default('./tmp/mail'),
 
-  TURNSTILE_SECRET_KEY: z.string().default(''),
-  TURNSTILE_ENABLED: booleanish.default(false),
-
   RATE_LIMIT_WINDOW_MINUTES: z.coerce.number().int().positive().default(15),
   RATE_LIMIT_MAX: z.coerce.number().int().positive().default(600),
   AUTH_RATE_LIMIT_MAX: z.coerce.number().int().positive().default(20),

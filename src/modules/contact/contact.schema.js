@@ -30,5 +30,4 @@ export const contactSchema = z.object({
     .trim()
     .min(20, 'Please tell us a little more (at least 20 characters).')
     .max(4000, 'Message is too long.'),
-  turnstileToken: z.string().max(4000).optional(),
 })

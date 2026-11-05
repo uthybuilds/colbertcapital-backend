@@ -7,7 +7,6 @@ import { hashPassword, verifyPassword } from '../../lib/password.js'
 import { requestMeta } from '../../lib/request.js'
 import { publicUser } from '../../lib/serialize.js'
 import { hashToken, issueRefreshToken, signAccessToken } from '../../lib/tokens.js'
-import { assertHuman } from '../../lib/turnstile.js'
 import { sendMail } from '../../mail/mailer.js'
 import {
   renderLoginOtpEmail,
@@ -145,8 +144,6 @@ async function startSession(user, req) {
 // ------------------------------------------------------------------- actions
 
 export async function register({ input, req }) {
-  await assertHuman(input.turnstileToken, req.ip)
-
   const existing = await prisma.user.findUnique({ where: { email: input.email } })
 
   if (existing?.emailVerifiedAt) {
@@ -202,9 +199,7 @@ export async function verifyEmail({ input, req }) {
   return { user: publicUser(updated), ...tokens }
 }
 
-export async function resendOtp({ input, req }) {
-  await assertHuman(input.turnstileToken, req.ip)
-
+export async function resendOtp({ input }) {
   const user = await prisma.user.findUnique({ where: { email: input.email } })
   if (!user) throw ApiError.badRequest('We could not find that account.')
   if (user.status === 'SUSPENDED') throw ApiError.forbidden('This account is suspended.')
@@ -220,8 +215,6 @@ export async function resendOtp({ input, req }) {
 }
 
 export async function login({ input, req }) {
-  await assertHuman(input.turnstileToken, req.ip)
-
   const user = await prisma.user.findUnique({ where: { email: input.email } })
 
   if (!user || !(await verifyPassword(input.password, user.passwordHash))) {
@@ -277,8 +270,6 @@ export async function loginVerify({ input, req }) {
 }
 
 export async function adminLogin({ input, req }) {
-  await assertHuman(input.turnstileToken, req.ip)
-
   const user = await prisma.user.findUnique({ where: { email: input.email } })
 
   if (!user || !(await verifyPassword(input.password, user.passwordHash))) {
@@ -362,9 +353,7 @@ export async function logout({ input, userId }) {
   return { message: 'Signed out.' }
 }
 
-export async function forgotPassword({ input, req }) {
-  await assertHuman(input.turnstileToken, req.ip)
-
+export async function forgotPassword({ input }) {
   const user = await prisma.user.findUnique({ where: { email: input.email } })
 
   // Always answer the same way so the endpoint cannot be used to enumerate accounts.

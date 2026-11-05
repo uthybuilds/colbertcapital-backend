@@ -28,17 +28,10 @@ export function createApp() {
       contentSecurityPolicy: {
         directives: {
           defaultSrc: ["'self'"],
-          scriptSrc: ["'self'", "'unsafe-inline'", 'https://challenges.cloudflare.com'],
+          scriptSrc: ["'self'", "'unsafe-inline'"],
           styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
           imgSrc: ["'self'", 'data:', 'https://*.trae.ai', 'https://*.coingecko.com', 'https://icon.horse'],
-          connectSrc: [
-            "'self'",
-            'https://challenges.cloudflare.com',
-            'https://*.challenges.cloudflare.com',
-            'https://*.coingecko.com',
-            'https://api.finnhub.io',
-          ],
-          frameSrc: ["'self'", 'https://challenges.cloudflare.com'],
+          connectSrc: ["'self'", 'https://*.coingecko.com', 'https://api.finnhub.io'],
           fontSrc: ["'self'", 'https://fonts.gstatic.com'],
           objectSrc: ["'none'"],
           upgradeInsecureRequests: [],
